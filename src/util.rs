@@ -272,6 +272,7 @@ impl<T: WrappedCPointer> AsCArray<T> for Vec<T> {
     }
 }
 
+#[derive(Clone)]
 pub(crate) struct NativePtr<T>
 where
     T: KafkaDrop,

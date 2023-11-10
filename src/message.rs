@@ -306,6 +306,7 @@ impl Headers for BorrowedHeaders {
 ///
 /// To transform a `BorrowedMessage` into a [`OwnedMessage`], use the
 /// [`detach`](BorrowedMessage::detach) method.
+#[derive(Clone)]
 pub struct BorrowedMessage<'a> {
     ptr: NativePtr<RDKafkaMessage>,
     _event: Arc<NativeEvent>,
