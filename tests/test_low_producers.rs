@@ -39,7 +39,7 @@ impl ClientContext for PrintingContext {
 impl ProducerContext for PrintingContext {
     type DeliveryOpaque = usize;
 
-    fn delivery(&self, delivery_result: &DeliveryResult, delivery_opaque: Self::DeliveryOpaque) {
+    fn delivery(&self, delivery_result: DeliveryResult, delivery_opaque: Self::DeliveryOpaque) {
         println!("Delivery: {:?} {:?}", delivery_result, delivery_opaque);
     }
 }
@@ -84,9 +84,9 @@ impl<Part: Partitioner + Send + Sync> ClientContext for CollectingContext<Part> 
 impl<Part: Partitioner + Send + Sync> ProducerContext<Part> for CollectingContext<Part> {
     type DeliveryOpaque = usize;
 
-    fn delivery(&self, delivery_result: &DeliveryResult, delivery_opaque: Self::DeliveryOpaque) {
+    fn delivery(&self, delivery_result: DeliveryResult, delivery_opaque: Self::DeliveryOpaque) {
         let mut results = self.results.lock().unwrap();
-        match *delivery_result {
+        match delivery_result {
             Ok(ref message) => (*results).push((message.detach(), None, delivery_opaque)),
             Err((ref err, ref message)) => {
                 (*results).push((message.detach(), Some(err.clone()), delivery_opaque))
@@ -277,7 +277,7 @@ impl ClientContext for HeaderCheckContext {}
 impl ProducerContext for HeaderCheckContext {
     type DeliveryOpaque = usize;
 
-    fn delivery(&self, delivery_result: &DeliveryResult, message_id: usize) {
+    fn delivery(&self, delivery_result: DeliveryResult, message_id: usize) {
         let message = delivery_result.as_ref().unwrap();
         if message_id % 2 == 0 {
             let headers = message.headers().unwrap();
@@ -422,7 +422,7 @@ fn test_base_producer_opaque_arc() -> Result<(), Box<dyn Error>> {
     impl ProducerContext for OpaqueArcContext {
         type DeliveryOpaque = Arc<Mutex<usize>>;
 
-        fn delivery(&self, _: &DeliveryResult, opaque: Self::DeliveryOpaque) {
+        fn delivery(&self, _: DeliveryResult, opaque: Self::DeliveryOpaque) {
             let mut shared_count = opaque.lock().unwrap();
             *shared_count += 1;
         }

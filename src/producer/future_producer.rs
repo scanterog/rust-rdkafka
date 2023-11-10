@@ -179,10 +179,10 @@ where
 
     fn delivery(
         &self,
-        delivery_result: &DeliveryResult<'_>,
+        delivery_result: DeliveryResult<'_>,
         tx: Box<oneshot::Sender<OwnedDeliveryResult>>,
     ) {
-        let owned_delivery_result = match *delivery_result {
+        let owned_delivery_result = match delivery_result {
             Ok(ref message) => Ok((message.partition(), message.offset())),
             Err((ref error, ref message)) => Err((error.clone(), message.detach())),
         };

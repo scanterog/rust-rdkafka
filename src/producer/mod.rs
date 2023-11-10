@@ -199,7 +199,7 @@ pub trait ProducerContext<Part: Partitioner = NoCustomPartitioner>: ClientContex
     /// This method will be called once the message has been delivered (or
     /// failed to). The `DeliveryOpaque` will be the one provided by the user
     /// when calling send.
-    fn delivery(&self, delivery_result: &DeliveryResult<'_>, delivery_opaque: Self::DeliveryOpaque);
+    fn delivery(&self, delivery_result: DeliveryResult<'_>, delivery_opaque: Self::DeliveryOpaque);
 
     /// This method is called when creating producer in order to optionally register custom partitioner.
     /// If custom partitioner is not used then `partitioner` configuration property is used (or its default).
@@ -263,7 +263,7 @@ impl ClientContext for DefaultProducerContext {}
 impl ProducerContext<NoCustomPartitioner> for DefaultProducerContext {
     type DeliveryOpaque = ();
 
-    fn delivery(&self, _: &DeliveryResult<'_>, _: Self::DeliveryOpaque) {}
+    fn delivery(&self, _: DeliveryResult<'_>, _: Self::DeliveryOpaque) {}
 }
 
 /// Common trait for all producers.

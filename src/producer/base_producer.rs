@@ -398,7 +398,7 @@ where
             let delivery_result =
                 unsafe { BorrowedMessage::from_dr_event(msg as *mut _, ev.clone(), self.client()) };
             let delivery_opaque = unsafe { C::DeliveryOpaque::from_ptr((*msg)._private) };
-            self.context().delivery(&delivery_result, delivery_opaque);
+            self.context().delivery(delivery_result, delivery_opaque);
         }
     }
 
