@@ -385,6 +385,15 @@ impl<'a> BorrowedMessage<'a> {
         }
     }
 
+    /// Create a new BorrowedMessage with a different lifetime
+    pub fn with_new_lifetime<C>(self, _client: &C) -> BorrowedMessage<'_> {
+        BorrowedMessage {
+            ptr: self.ptr,
+            _event: self._event,
+            _owner: PhantomData,
+        }
+    }
+
     /// Returns a pointer to the [`RDKafkaMessage`].
     pub fn ptr(&self) -> *mut RDKafkaMessage {
         self.ptr.ptr()
