@@ -233,12 +233,6 @@ impl<C: ClientContext> Client<C> {
         context: Arc<C>,
     ) -> KafkaResult<Client<C>> {
         let mut err_buf = ErrBuf::new();
-        unsafe {
-            rdsys::rd_kafka_conf_set_opaque(
-                native_config.ptr(),
-                Arc::as_ptr(&context) as *mut c_void,
-            )
-        };
 
         let client_ptr = unsafe {
             let native_config = ManuallyDrop::new(native_config);
